@@ -12,20 +12,47 @@ const db = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "password",
-    database: "dbis"
+    database: "airport-dbms-trial"
 })
 
-// app.get("/", (req, res)=>{
+db.connect((err)=>{
+    if(err){
+        throw err;
+    }
+    console.log("kjcnrubdc")
+})
 
-// })
 
-app.get("/", (req, res) => {
-    db.query("SELECT * FROM users", (err, results) => {
-        if (err) console.log(err);
-        else {
-            console.log(results);
-            res.render("index.ejs", { results });
+
+app.get('/sign_in', (req, res)=>{
+    res.render('sign_in.ejs')
+})
+
+app.get('/search', (req, res)=>{
+    var email=req.query.email
+    var password=req.query.password
+    let sql=`select * from login where email='${email}'`
+
+    db.query(sql, (err, result)=>{
+        if(err) console.log(err)
+
+        console.log(password)
+        console.log(result.password)
+        if(result.length==0)
+        {
+            res.render('sign_in.ejs')
+            // prompt("useremail does not exist")
         }
+        else if(result[0].password==password)
+        {
+            res.render('home.ejs', {result})
+        }
+        else
+        {
+            res.render('sign_in.ejs')
+            // prompt("invali password")
+        }
+
     })
 })
 
