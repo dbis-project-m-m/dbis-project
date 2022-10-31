@@ -25,12 +25,24 @@ db.connect((err) => {
 app.get('/', (req, res) => {
     res.render('home.ejs');
 })
+app.get('/home', (req, res) => {
+    res.render('home.ejs');
+})
 
 app.get('/sign_in', (req, res) => {
     res.render('sign_in.ejs', { validity: !null })
 })
 app.get('/index', (req, res) => {
     res.render('index.ejs')
+})
+app.get('/amenities', (req, res) => {
+    res.render('amenities.ejs')
+})
+app.get('/find_flight', (req, res) => {
+    res.render('find_flight.ejs')
+})
+app.get('/my_account', (req, res) => {
+    res.render('my_account.ejs')
 })
 app.get('/navbar', (req, res) => {
     res.render('templates/partials/navbar.ejs')
