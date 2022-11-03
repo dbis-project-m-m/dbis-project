@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/flight_output.css">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+
+    <table class="rwd-table">
+        <tr>
+            <th>SR NO.</th>
+            <th>flight name</th>
+            <th>flight id</th>
+            <th>time</th>
+            <th>book</th>
+        </tr>
+        <% let c=0 %>
+            <%for(let flight of results){%>
+
+                <tr>
+                    <td data-th="Movie Title">
+                        <%= ++c %>
+                    </td>
+                    <td data-th="Genre">
+                        <%=flight.airline %>
+                    </td>
+                    <td data-th="Year">
+                        <%=flight.flight_id %>
+                    </td>
+                    <td data-th="Gross">
+                        <%=flight.arrival_time %>
+                    </td>
+                    <td>
+                        <form action="/booking/<%=flight.flight_id%>">
+                            <input type="submit" value="book now">
+                        </form>
+
+                    </td>
+
+                </tr>
+
+
+                <%}%>
+
+
+    </table>
+
+
+
+
+
+</body>
+
+</html>
