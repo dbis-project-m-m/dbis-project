@@ -39,7 +39,25 @@ app.get('/amenities', (req, res) => {
     res.render('amenities.ejs')
 })
 app.get('/find_flight', (req, res) => {
-    res.render('find_flight.ejs')
+    res.render('find_flight.ejs', { results:[]})
+})
+app.get('/output', (req, res) => {
+    let input = {
+        to: req.query.to,
+        from: req.query.from,
+        date: req.query.date
+    }
+
+    let sql = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration 
+    from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
+    where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}'`
+    db.query(sql, (err, results) => {
+        if (err) console.log(err)
+        console.log(results)
+        res.render('find_flight.ejs', { results })
+
+    })
+
 })
 app.get('/my_account', (req, res) => {
     res.render('my_account.ejs')
@@ -52,17 +70,7 @@ app.get('/search', (req, res) => {
     var email = req.query.email
     var password = req.query.password
     let sql = `select * from login where email='${email}'`
-    // let answer = [{
-    //     validity: "invalid password",
-    //     opt: "user email does not exist"
-    // },
-    // {
-    //     validity: "invlid password",
-    //     opt: "user emal does not exist"
-    // }
-    // ]
-    // let validity = "invalid password";
-    // let opt = "user email does not exist";
+
     let prompty = {
         validity: null
     };
@@ -85,6 +93,10 @@ app.get('/search', (req, res) => {
         }
 
     })
+})
+
+app.get('/booking', (req, res)=>{
+    res.render('booking.ejs')
 })
 
 app.listen(3000, () => {
