@@ -39,8 +39,56 @@ app.get('/amenities', (req, res) => {
     res.render('amenities.ejs')
 })
 app.get('/find_flight', (req, res) => {
-    res.render('find_flight.ejs', { results:[]})
+    res.render('find_flight.ejs', { results: [] })
 })
+app.get('/booking/:flight_id', (req, res) => {
+
+    let { flight_id } = req.params;
+    console.log(flight_id)
+
+
+
+    res.render('booking.ejs')
+})
+
+app.get('/bookticket', (req, res) => {
+    let data = {
+        name: req.query.name,
+        email: req.query.email,
+        mobile_no: req.query.mobile_no,
+        aadhar_no: req.query.aadhar_no
+    }
+
+    let sql2 = `select aadhar_no from passengers`
+    db.query(sql2, (err, result) => {
+        if (err) { console.log(err) }
+        else {
+            let check = false;
+            for (let values of result) {
+                if (values.aadhar_no == data.aadhar_no) {
+                    check = true;
+                    break;
+                }
+            }
+            if (!check && data.name != null && data.email != null && data.mobile_no != null && data.aadhar_no != null) {
+                let sql1 = `insert into passengers(name, email, mobile_no, aadhar_no) values ('${data.name}','${data.email}','${data.mobile_no}','${data.aadhar_no}')  `
+                db.query(sql1, (err, result) => {
+                    if (err) console.log(err)
+                    console.log(data.name)
+                    res.render('booking.ejs')
+                })
+            }
+            else {
+                res.render('booking.ejs')
+            }
+        }
+
+    })
+
+
+})
+
+
 app.get('/output', (req, res) => {
     let input = {
         to: req.query.to,
@@ -53,8 +101,8 @@ app.get('/output', (req, res) => {
     where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}'`
     db.query(sql, (err, results) => {
         if (err) console.log(err)
-        console.log(results)
-        res.render('find_flight.ejs', { results })
+
+        res.render('flight_output.ejs', { results })
 
     })
 
