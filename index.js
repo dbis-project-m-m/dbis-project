@@ -115,8 +115,11 @@ app.get('/navbar', (req, res) => {
 })
 
 app.get('/search', (req, res) => {
+    console.log("loda")
     var email = req.query.email
     var password = req.query.password
+    console.log(email)
+    console.log(password)
     let sql = `select * from login where email='${email}'`
 
     let prompty = {
