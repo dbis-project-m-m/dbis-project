@@ -48,18 +48,25 @@ db.connect((err) => {
     console.log("db connected")
 })
 
+function convert(str) {
+    var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
+
 app.get('/', (req, res) => {
     res.render('home.ejs');
 })
 
-app.get('/create_acct', (req, res)=>{
+app.get('/create_acct', (req, res) => {
     console.log("i am here")
-    var username=req.query.username
-    var email=req.query.email
-    var password=req.query.password
+    var username = req.query.username
+    var email = req.query.email
+    var password = req.query.password
 
-    db.query("insert into login(email, username, password) values (?, ?, ?)", [ email, username, password], (err, result)=>{
-        if(err) console.log(err)
+    db.query("insert into login(email, username, password) values (?, ?, ?)", [email, username, password], (err, result) => {
+        if (err) console.log(err)
 
         res.redirect('/sign_in')
     })
@@ -106,21 +113,44 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
-    if(req.session.email!=undefined)
-    {
-        let result6={email: req.session.email}
-        res.render('home.ejs', {email: req.session.email});
+    if (req.session.email != undefined) {
+        let result6 = { email: req.session.email }
+        res.render('home.ejs', { email: req.session.email });
     }
     else {
-        res.render('home.ejs', {result6:[]})
+        res.render('home.ejs', { result6: [] })
     }
 })
+
+// app.get('/sort_by_airline', (req, res) => {
+
+//     var airline= req.query.airline
+// // res.render('flight')
+// let results=req.params.results
+
+
+// let sql = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
+// from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
+// where r.from_route='${results.from}' and r.to_route='${results.to}' and date(af.arrival_time)='${results.date}' and f.airline='${airline}'`
+
+// db.query(sql, (err, results) => {
+//     if (err) console.log(err)
+
+//     res.render('flight_output.ejs', { results })
+
+// })
+//     res.render('flight_output.ejs', {airline: req.query.airline})
+// })
+
 
 app.get('/sign_in', (req, res) => {
     res.render('sign_in.ejs', { validity: !null })
 })
 app.get('/index', (req, res) => {
     res.render('index.ejs')
+})
+app.get('/new', (req, res) => {
+    res.render('reset.ejs')
 })
 app.get('/amenities', (req, res) => {
     res.render('amenities.ejs')
@@ -137,18 +167,19 @@ app.get('/find_flight', (req, res) => {
 })
 app.get('/booking/:flight_id/:arrival_schedule_id', (req, res) => {
 
-    if(req.session.email!=undefined)
-    {
+    if (req.session.email != undefined) {
         let result = {
             flight_id: req.params.flight_id,
             schedule_id: req.params.arrival_schedule_id
         }
         console.log(result.schedule_id)
-        res.render('booking.ejs', { flight_id: req.params.flight_id,
-            schedule_id: req.params.arrival_schedule_id, abc: 3 })
+        res.render('booking.ejs', {
+            flight_id: req.params.flight_id,
+            schedule_id: req.params.arrival_schedule_id, abc: 3
+        })
     }
-    else{
-        res.render('sign_in.ejs')
+    else {
+        res.redirect('/sign_in')
     }
 })
 
@@ -204,27 +235,75 @@ app.get('/bookticket/:flight_id/:schedule_id', (req, res) => {
 
 
 })
+app.get('/airline/:to_route/:from_route/:arrival_time', (req, res) => {
+    let input = {
+        to: req.params.to_route,
+        from: req.params.from_route,
+        arrival_time: req.params.arrival_time,
+        airline: req.query.airline
+    }
+   input.arrival_time= convert(input.arrival_time)
+    console.log(input.arrival_time)
+    console.log(input.to);
 
+    let sql2 = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
+    from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
+    where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)=date('${input.arrival_time}') and f.airline='${input.airline}'`
+
+
+
+    db.query(sql2, (err, results) => {
+        if (err) console.log(err)
+        console.log(results);
+        res.render('flight_output.ejs', { results })
+
+    })
+
+
+})
 
 app.get('/output', (req, res) => {
     let input = {
         to: req.query.to,
         from: req.query.from,
-        date: req.query.date
+        date: req.query.date,
+        // airline: req.query.airline
     }
 
     let sql = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
     from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
     where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}'`
+
+    // let sql2 = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
+    // from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
+    // where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}' and f.airline='${input.airline}'`
+
+    // if(input.airline="")
+    // {
+
     db.query(sql, (err, results) => {
         if (err) console.log(err)
 
         res.render('flight_output.ejs', { results })
 
     })
+    // }
+    // else {
+    //     console.log("me idhar hun")
+    //     console.log(input.from)
+    //     console.log(input.airline)
+    //     db.query(sql2, (err, results) => {
+    //         if (err) console.log(err)
+
+    //         res.render('flight_output.ejs', { results })
+
+    //     })
+    // }
 
 })
 app.get('/my_account', (req, res) => {
+
+    let sql = ``
     res.render('my_account.ejs')
 })
 app.get('/navbar', (req, res) => {
