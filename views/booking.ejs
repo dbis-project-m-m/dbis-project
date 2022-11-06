@@ -13,7 +13,7 @@
     <%- include('./templates/partials/navbar.ejs')%>
     <div id="form-main">
         <div id="form-div">
-            <form class="form" id="form1" action="/bookticket">
+            <form class="form" id="form1" action="/bookticket/<%=locals.flight_id%>/<%=locals.schedule_id%>">
 
                 <p class="name">
                     <input name="name" type="text"

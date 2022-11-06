@@ -24,12 +24,14 @@
         <div class="container right-panel-active">
             <!-- Sign Up -->
             <div class="container__form container--signup">
-                <form action="/search" class="form" id="form1">
+                <form action="/create_acct" class="form" id="form1">
                     <h2 class="form__title">Sign Up</h2>
-                    <input type="text" placeholder="Username" class="input" />
+
+                    <input type="text" placeholder="Username" class="input" name="username"/>
                     <input type="text" placeholder="Email" class="input" name="email" />
                     <input type="password" placeholder="Password" class="input" name="password" />
-                    <button class="btn">Sign Up</button>
+                    <button class="btn" type="submit">loda 1</button>
+
                 </form>
             </div>
 
@@ -40,7 +42,7 @@
                     <input type="text" placeholder="Email" class="input" name="email" />
                     <input type="password" placeholder="Password" class="input" name="password" />
                     <a href="#" class="link">Forgot your password?</a>
-                    <button class="btn">loda</button>
+                    <button class="btn" type="submit">loda</button>
                 </form>
             </div>
 
@@ -63,13 +65,15 @@
             <div class="container right-panel-active">
                 <!-- Sign Up -->
                 <div class="container__form container--signup">
-                    <form action="/search" class="form" id="form1">
+                    <form action="/create_acct" class="form" method="get">
                         <h2 class="form__title">Sign Up</h2>
-                        <input type="text" placeholder="Username" class="input" />
+
+                        <input type="text" placeholder="Username" class="input" name="username"/>
                         <input type="text" placeholder="Email" class="input" name="email" />
                         <input type="password" placeholder="Password" class="input" name="password" />
 
-                        <button class="btn" type="submit">Sign Up</button>
+                        <button type="submit" class="btn">lodap</button>
+
 
                     </form>
                 </div>
@@ -78,8 +82,9 @@
                 <div class="container__form container--signin">
                     <form action="/search" class="form" id="">
                         <h2 class="form__title">Sign In</h2>
-                        <input type="text" placeholder="Email" name="email" />
-                        <input type="password" placeholder="Password" name="password" />
+
+                        <input type="text" placeholder="Email" name="email" class="input"/>
+                        <input type="password" placeholder="Password" name="password" class="input"/>
                         <a href="#" class="link">Forgot your password?</a>
                         <button class="btn" type="submit">loda</button>
                     </form>

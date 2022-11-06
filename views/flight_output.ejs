@@ -18,6 +18,13 @@
             </span> <span class="yellow">FLIGHTS</pan>
         </h1>
 
+        <form action="/airline/<%=results[0].to_route%>/<%=results[0].from_route%>/<%=results[0].arrival_time%>">
+            <input type="text" name="airline" id="airline" class="airline">
+            <button class="airline-btn" type="submit">apply changes</button>
+        </form>
+
+
+
 
         <table class="container">
             <thead>
@@ -26,7 +33,7 @@
                         <h1>Sr no.</h1>
                     </th>
                     <th>
-                        <h1>Fight name</h1>
+                        <h1>Flight name</h1>
                     </th>
                     <th>
                         <h1>FLIGHT ID</h1>
@@ -41,6 +48,8 @@
             </thead>
             <tbody>
                 <% let c=0 %>
+
+
                     <%for(let flight of results){%>
 
                         <tr>
@@ -70,9 +79,10 @@
                             </td>
                             <td>
                                 <div id="btnd">
-                                    <form action="/booking/<%=flight.flight_id%>">
+                                    <form action="/booking/<%=flight.flight_id%>/<%=flight.arrival_schedule_id%>">
                                         <input type="submit" value="book now" id="button">
                                     </form>
+
                                 </div>
 
 
@@ -83,6 +93,7 @@
 
                         <%}%>
 
+
             </tbody>
         </table>
 
@@ -91,7 +102,13 @@
 
 
 
-
+        <script>
+            const input = document.querySelector(".airline");
+            const btn = document.querySelector(".airline-btn");
+            btn.addEventListener("click", function () {
+                console.log(input.value)
+            })
+        </script>
 
 
 </body>
