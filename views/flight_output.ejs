@@ -38,7 +38,7 @@
                         <%=flight.arrival_time %>
                     </td>
                     <td>
-                        <form action="/booking/<%=flight.flight_id%>">
+                        <form action="/booking/<%=flight.flight_id%>/<%=flight.arrival_schedule_id%>">
                             <input type="submit" value="book now">
                         </form>
 
