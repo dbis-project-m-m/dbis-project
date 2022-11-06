@@ -5,12 +5,97 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/myaccn.css">
     <title>Document</title>
 </head>
 
 <body>
     <%- include('./templates/partials/navbar.ejs')%>
-        <h1>hii manas</h1>
+
+
+        <section class="profile_container">
+            <div class="profile_img_section">
+                <img class="profile_img-LG"
+                    src="https://cdn.idntimes.com/content-images/community/2020/10/122163576-262420488513552-863075192792965334-n-f95e3dd6d25d3618eb9f1b3b9bcc5796.jpg" />
+                <div class="flag_wrapper">
+                    <img class="flag"
+                        src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/flag-south-korea_1f1f0-1f1f7.png"
+                        alt="South Korean Flag" />
+                </div>
+            </div>
+
+            <div class="profile_desc_section">
+                <h2>NAME</h2>
+                <h4>my-flights</h4>
+                <p class="description">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <h3>Sr no.</h3>
+                            </th>
+                            <th>
+                                <h3>Fight name</h3>
+                            </th>
+                            <th>
+                                <h3>FLIGHT ID</h3>
+                            </th>
+                            <th>
+                                <h3>TIME</h3>
+                            </th>
+                            <th>
+                                <h3>book</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                    </tbody>
+                </table>
+                </p>
+
+
+            </div>
+
+        </section>
+
+        <div class="info">
+            <ul>
+                <li>
+                    <div class="link_img_wrapper">
+                        <img class="link_img"
+                            src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/round-pushpin_1f4cd.png"
+                            alt="">
+                    </div>
+                    <p>adress</p>
+                </li>
+                <li>
+                    <div class="link_img_wrapper">
+                        <img class="link_img"
+                            src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/speaking-head_1f5e3-fe0f.png"
+                            alt="">
+                    </div>
+                    <p>Korean, English</p>
+                </li>
+                <li>
+                    <div class="link_img_wrapper">
+                        <img class="link_img"
+                            src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/samsung/265/globe-with-meridians_1f310.png"
+                            alt="">
+                    </div>
+                    <p>email</p>
+                </li>
+            </ul>
+        </div>
+        <div id="button">
+            <form action="/new" method="get">
+                <button type="submit" id="fd">
+                    reset!
+                </button>
+            </form>
+
+        </div>
 </body>
 
 </html>
