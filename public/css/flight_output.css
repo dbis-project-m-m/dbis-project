@@ -9,7 +9,9 @@ body {
     background-color: #1F2739;
 
 }
-
+.mycss{
+    display:inline;
+}
 h1 {
     font-size: 3em;
     font-weight: 300;

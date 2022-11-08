@@ -3,11 +3,17 @@ const mysql = require("mysql")
 const path = require("path")
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
+const flash = require('connect-flash');
 
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
+app.use(flash());
 app.set("view engine", "ejs");
 app.set('/', path.join(__dirname, '/views'));
+// app.use(function(req, res, next){
+//     res.locals.message = req.flash();
+//     next();
+// });
 
 
 const db = mysql.createConnection({
@@ -50,11 +56,14 @@ db.connect((err) => {
 
 function convert(str) {
     var date = new Date(str),
-      mnth = ("0" + (date.getMonth() + 1)).slice(-2),
-      day = ("0" + date.getDate()).slice(-2);
+        mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
     return [date.getFullYear(), mnth, day].join("-");
-  }
-
+}
+var moment = require('moment');
+exports.index = function (req, res) {
+    res.render('index', { moment: moment });
+}
 app.get('/', (req, res) => {
     res.render('home.ejs');
 })
@@ -84,8 +93,8 @@ app.get('/search', (req, res) => {
     db.query(sql, (err, result) => {
         if (err) console.log(err)
 
-        console.log(password)
-        console.log(result[0].password)
+        // console.log(password)
+        // console.log(result[0].password)
         if (result.length == 0) {
             res.render('sign_in.ejs', { validity: null });
             // prompt("useremail does not exist")
@@ -93,7 +102,7 @@ app.get('/search', (req, res) => {
         else if (result[0].password == password) {
             session = req.session;
             session.email = req.query.email;
-            console.log(req.session)
+            // console.log(req.session)
             res.render('home.ejs', { result })
         }
         else {
@@ -109,12 +118,13 @@ app.get('/search', (req, res) => {
 app.get('/logout', (req, res) => {
     req.session.destroy();
     // console.log(req.session.user)
+
     res.redirect('/sign_in');
+
 });
 
 app.get('/home', (req, res) => {
     if (req.session.email != undefined) {
-        let result6 = { email: req.session.email }
         res.render('home.ejs', { email: req.session.email });
     }
     else {
@@ -122,25 +132,7 @@ app.get('/home', (req, res) => {
     }
 })
 
-// app.get('/sort_by_airline', (req, res) => {
 
-//     var airline= req.query.airline
-// // res.render('flight')
-// let results=req.params.results
-
-
-// let sql = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
-// from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
-// where r.from_route='${results.from}' and r.to_route='${results.to}' and date(af.arrival_time)='${results.date}' and f.airline='${airline}'`
-
-// db.query(sql, (err, results) => {
-//     if (err) console.log(err)
-
-//     res.render('flight_output.ejs', { results })
-
-// })
-//     res.render('flight_output.ejs', {airline: req.query.airline})
-// })
 
 
 app.get('/sign_in', (req, res) => {
@@ -168,15 +160,28 @@ app.get('/find_flight', (req, res) => {
 app.get('/booking/:flight_id/:arrival_schedule_id', (req, res) => {
 
     if (req.session.email != undefined) {
-        let result = {
-            flight_id: req.params.flight_id,
-            schedule_id: req.params.arrival_schedule_id
-        }
-        console.log(result.schedule_id)
-        res.render('booking.ejs', {
-            flight_id: req.params.flight_id,
-            schedule_id: req.params.arrival_schedule_id, abc: 3
+        console.log("me yaha hun");
+        // console.log(result.schedule_id)
+        db.query("select * from arrival_flights as af join flight as f on af.flight_id=f.flight_id where f.flight_id=? and af.arrival_schedule_id=?", [req.params.flight_id, req.params.arrival_schedule_id], (err, result) => {
+            if (err) console.log(err)
+            console.log(result);
+            if (result[0].passenger_no < result[0].capacity) {
+                console.log(result[0].passenger_no);
+                console.log(result[0].capacity);
+                db.query("update arrival_flights set passenger_no=passenger_no+1 where flight_id=?", [req.params.flight_id], (err, result2) => {
+                    if (err) console.log(err)
+                })
+                res.render('booking.ejs', {
+                    flight_id: req.params.flight_id,
+                    schedule_id: req.params.arrival_schedule_id, abc: 3
+                })
+            }
+            else {
+                // req.flash('message', 'laude sab book ho chuke he')
+                console.log("flight full");
+            }
         })
+
     }
     else {
         res.redirect('/sign_in')
@@ -217,7 +222,7 @@ app.get('/bookticket/:flight_id/:schedule_id', (req, res) => {
                             if (err) console.log(err)
                             console.log("lodu")
                             console.log(result2[0].booking_id)
-                            db.query("insert into tickets(booking_id, passenger_id) values (?, ?)", [result2[0].booking_id, result3[0].passenger_id], (err, result4) => {
+                            db.query("insert into tickets(booking_id, passenger_id, user_mail) values (?, ?, ?)", [result2[0].booking_id, result3[0].passenger_id, req.session.email], (err, result4) => {
                                 console.log(data.name)
                                 res.render('booking.ejs')
                             })
@@ -240,22 +245,40 @@ app.get('/airline/:to_route/:from_route/:arrival_time', (req, res) => {
         to: req.params.to_route,
         from: req.params.from_route,
         arrival_time: req.params.arrival_time,
-        airline: req.query.airline
+        airline: req.query.choose_airline,
+        sort_opt: req.query.sort_by_cond
     }
-   input.arrival_time= convert(input.arrival_time)
+    input.arrival_time = convert(input.arrival_time)
     console.log(input.arrival_time)
     console.log(input.to);
 
-    let sql2 = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
-    from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
-    where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)=date('${input.arrival_time}') and f.airline='${input.airline}'`
+    let sql2 = "select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id, af.economy_cost, af.business_cost, af.first_cost from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id where r.from_route like '%" + input.from + "%' and r.to_route like '%" + input.to + "%' and date(af.arrival_time) like '%" + input.arrival_time + "%' and f.airline like '%" + input.airline + "%' order by f.airline"
+    let sql3 = "select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id, af.economy_cost, af.business_cost, af.first_cost from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id where r.from_route like '%" + input.from + "%' and r.to_route like '%" + input.to + "%' and date(af.arrival_time) like '%" + input.arrival_time + "%' order by f.airline"
 
 
 
     db.query(sql2, (err, results) => {
         if (err) console.log(err)
         console.log(results);
-        res.render('flight_output.ejs', { results })
+        console.log(input.sort_opt)
+
+        if (results.length == 0) {
+            console.log("no flights available")
+            res.redirect('/find_flight')
+        }
+        else {
+
+            db.query(sql3, (err, result3) => {
+                for (let values of results) {
+                    values.arrival_time = moment(new Date(values.arrival_time)).format('YYYY-MM-DD HH:mm:ss')
+                }
+                for (let values of result3) {
+                    values.arrival_time = moment(new Date(values.arrival_time)).format('YYYY-MM-DD HH:mm:ss')
+                }
+
+                res.render('flight_output.ejs', { results, result3, result2: input.sort_opt })
+            })
+        }
 
     })
 
@@ -270,41 +293,37 @@ app.get('/output', (req, res) => {
         // airline: req.query.airline
     }
 
-    let sql = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
-    from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
-    where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}'`
+    let sql = "select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id, af.economy_cost, af.business_cost, af.first_cost from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id where r.from_route like '%" + input.from + "%' and r.to_route like '%" + input.to + "%' and date(af.arrival_time) like '%" + input.date + "%' order by f.airline"
 
-    // let sql2 = `select f.flight_id, f.airline, r.from_route, r.to_route, af.arrival_time, af.duration, af.arrival_schedule_id 
-    // from flight as f join arrival_flights as af on f.flight_id=af.flight_id join route as r on r.route_id=af.route_id
-    // where r.from_route='${input.from}' and r.to_route='${input.to}' and date(af.arrival_time)='${input.date}' and f.airline='${input.airline}'`
-
-    // if(input.airline="")
-    // {
 
     db.query(sql, (err, results) => {
         if (err) console.log(err)
 
-        res.render('flight_output.ejs', { results })
+        for (let values of results) {
+            values.arrival_time = moment(new Date(values.arrival_time)).format('YYYY-MM-DD HH:mm:ss')
+        }
+        console.log(results)
+        let result3 = results
+        res.render('flight_output.ejs', { results, result3, result2: 'Cost' })
 
     })
-    // }
-    // else {
-    //     console.log("me idhar hun")
-    //     console.log(input.from)
-    //     console.log(input.airline)
-    //     db.query(sql2, (err, results) => {
-    //         if (err) console.log(err)
 
-    //         res.render('flight_output.ejs', { results })
-
-    //     })
-    // }
 
 })
 app.get('/my_account', (req, res) => {
 
-    let sql = ``
-    res.render('my_account.ejs')
+    let sql = `select * from tickets as t
+    join login as l on l.email=t.user_mail join
+     bookings as b on b.booking_id=t.booking_id  join
+     arrival_flights as af on af.arrival_schedule_id=b.schedule_id join flight as f on f.flight_id=af.flight_id where  t.user_mail='${req.session.email}'`
+    console.log(req.session.email);
+    db.query(sql, (err, results) => {
+        if (err) console.log(err)
+
+        res.render('my_account.ejs', { results })
+
+    })
+
 })
 app.get('/navbar', (req, res) => {
     res.render('templates/partials/navbar.ejs')

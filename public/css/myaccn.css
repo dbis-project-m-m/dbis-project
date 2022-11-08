@@ -24,7 +24,7 @@ p {
 .info,
 .back {
     margin: 60px 100px 0px;
-    max-width: 900px;
+    /* max-width: 900px; */
     display: flex;
     overflow-x: hidden;
 }
@@ -83,7 +83,7 @@ p {
 .profile_desc_section {
     display: flex;
     flex-direction: column;
-
+    width: 1000px;
     margin-left: 50px;
 }
 
@@ -139,7 +139,7 @@ li p {
     color: rgba(34, 34, 34, 0.5);
 }
 
-@media screen and (max-width: 1000px) {
+@media screen and (max-width: 1100px) {
 
     .profile_container,
     .info,
@@ -161,7 +161,7 @@ li p {
         border-radius: 100%;
     }
 
-    .flag_wrapper {}
+
 
     .profile_desc_section {
         margin-left: 0px;
@@ -188,8 +188,93 @@ li p {
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     border-radius: 20%;
     border: 0.5px solid gray;
+
 }
 
 body {
     background-color: rgba(153, 231, 251, 0.192) !important;
+}
+
+
+
+/* heading */
+table {
+    border: 1px solid rgb(176, 230, 247);
+    border-collapse: collapse;
+    margin: 0;
+    padding: 10;
+    width: 100%;
+    table-layout: inherit;
+}
+
+table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+table tr {
+    background-color: #26272b1a;
+    border: 1px solid rgba(8, 8, 8, 0.315);
+    padding: .35em;
+}
+
+table th,
+table td {
+    padding: .625em;
+    text-align: center;
+}
+
+table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        /*
+      * aria-label has no advantage, it won't be read inside a table
+      content: attr(aria-label);
+      */
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
 }

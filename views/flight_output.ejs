@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/flight_output.css">
     <title>Document</title>
+    
 </head>
 
 <body>
@@ -17,12 +18,31 @@
             </span><span class="blue">
             </span> <span class="yellow">FLIGHTS</pan>
         </h1>
+        
+            <form action="/airline/<%=results[0].to_route%>/<%=results[0].from_route%>/<%=results[0].arrival_time%>" class="mycss">
+                
+                
+                <label for="sort">Sort By</label>
+                <select name="sort_by_cond" id="sort" >
+                    <option>Cost</option>
+                    <option>Time</option>
+                </select>
 
-        <form action="/airline/<%=results[0].to_route%>/<%=results[0].from_route%>/<%=results[0].arrival_time%>">
-            <input type="text" name="airline" id="airline" class="airline">
-            <button class="airline-btn" type="submit">apply changes</button>
-        </form>
+                <label for="airline">Choose Airline</label>
+                <select name="choose_airline" id="airline">
 
+                   <% const unique_values=[...new Set(result3.map(data => data.airline))] %>
+
+
+                    <%for(let i=0; i<unique_values.length; i++){%>
+                        <option><%=unique_values[i]%></option>
+                        
+                            <% }%>
+                </select>
+
+                <button class="airline-btn" type="submit">apply changes</button>
+            </form>
+            
 
 
 
@@ -42,13 +62,30 @@
                         <h1>TIME</h1>
                     </th>
                     <th>
-                        <h1>book</h1>
+                        <h1>COST</h1>
+                    </th>
+                    <th>
+                        <h1></h1>
                     </th>
                 </tr>
             </thead>
             <tbody>
                 <% let c=0 %>
 
+                <% if(result2=='Cost'){%>
+                
+                        <% results.sort(function(a, b){ %>
+                            <%  return (a.economy_cost-b.economy_cost)%>
+                            <% })%>
+                <%} else if(result2=='Time'){%>
+                        <% results.sort(function(a, b){ %>
+                            <%  return (a.time-b.time)%>
+                        <% })%>
+                 <% }%>
+                    
+
+                  
+                    
 
                     <%for(let flight of results){%>
 
@@ -73,7 +110,14 @@
                             </td>
                             <td data-th="Gross">
                                 <div class="extra">
-                                    <%=flight.arrival_time %>
+                                    
+                                    <%=flight.arrival_time %>❤️❤️❤️❤️❤️
+                                </div>
+
+                            </td>
+                            <td data-th="Gross">
+                                <div class="extra">
+                                    ₹<%=flight.economy_cost %>-₹<%=flight.first_cost %>
                                 </div>
 
                             </td>

@@ -25,30 +25,62 @@
             </div>
 
             <div class="profile_desc_section">
-                <h2>NAME</h2>
+                <h2>
+                    <%=results[0].username.toUpperCase()%>
+                </h2>
                 <h4>my-flights</h4>
                 <p class="description">
                 <table>
                     <thead>
                         <tr>
-                            <th>
-                                <h3>Sr no.</h3>
+                            <th scope="col">
+                                <h3>Sr.no</h3>
                             </th>
-                            <th>
-                                <h3>Fight name</h3>
+                            <th scope="col">
+                                <h3>Flight id </h3>
                             </th>
-                            <th>
-                                <h3>FLIGHT ID</h3>
+                            <th scope="col">
+                                <h3>Flight name</h3>
                             </th>
-                            <th>
-                                <h3>TIME</h3>
-                            </th>
-                            <th>
-                                <h3>book</h3>
+                            <th scope="col">
+                                <h3>Time</h3>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
+                        <% let c=0 %>
+
+
+                            <%for(let flight of results){%>
+
+
+                                <tr>
+                                    <td data-label="Account">
+                                        <div class="extra">
+                                            <%= ++c %>
+                                        </div>
+                                    </td>
+                                    <td data-label="Due Date">
+                                        <div class="extra">
+                                            <%=flight.flight_id %>
+                                        </div>
+                                    </td>
+                                    <td data-label="Amount">
+                                        <div class="extra">
+                                            <%=flight.airline %>
+                                        </div>
+                                    </td>
+                                    <td data-label="Period">
+                                        <div class="extra">
+                                            <%=flight.arrival_time %>
+                                        </div>
+                                    </td>
+                                </tr>
+
+
+                                <%}%>
+
+
 
 
                     </tbody>
@@ -68,7 +100,9 @@
                             src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/round-pushpin_1f4cd.png"
                             alt="">
                     </div>
-                    <p>adress</p>
+                    <p>
+                        <%=results[0].address%>
+                    </p>
                 </li>
                 <li>
                     <div class="link_img_wrapper">
@@ -76,7 +110,9 @@
                             src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/apple/271/speaking-head_1f5e3-fe0f.png"
                             alt="">
                     </div>
-                    <p>Korean, English</p>
+                    <p>
+                        <%=results[0].country%>
+                    </p>
                 </li>
                 <li>
                     <div class="link_img_wrapper">
@@ -84,7 +120,9 @@
                             src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/240/samsung/265/globe-with-meridians_1f310.png"
                             alt="">
                     </div>
-                    <p>email</p>
+                    <p>
+                        <%=results[0].email%>
+                    </p>
                 </li>
             </ul>
         </div>
