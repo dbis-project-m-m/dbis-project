@@ -1,51 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, intial-scale=1">
+<title>Custom Coding</title>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/home.css">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>homepage</title>
-    <link rel="stylesheet" href="/css/home.css">
+
 </head>
 
 <body>
-    <div class="tophead">
-        <span>
-            <h1 class="heading">M&M AIRPORT</h1>
-            <!-- <h2>hello! <%=locals.email%>
-            </h2> -->
-        </span>
+    <header>
+        <h2 href="#"> M & M AIRPORT</h2>
+        <nav>
+            <li><a href="../../home">HOME</a> </li>
+            <li><a href="../../find_flight">find flight</a> </li>
+            <li><a href="../../amenities">amenities</a> </li>
+            <li><a href="../../my_account">my account</a> </li>
+            <li><a href="../../sign_in">login</a> </li>
+            <li><a href="../../sign_in">logout</a> </li>
+        </nav>
+    </header>
 
-    </div>
-    <%- include('./templates/partials/navbar.ejs')%>
-        <!-- <a href="./templates/partials/navbar.ejs"></a> -->
+    <section class="hero">
+        <div class="background-image"
+            style="background-image: url(https://wallpaper-house.com/data/out/7/wallpaper2you_139824.jpg)"></div>
+        <div class="hero-content-area">
+            <h1>M & M AIRPORT</h1>
+            <h3> EASY AFFORDABLE AND MEMORABLE EXPERIENCE</h3>
+            <a href="#s2" class="btn">EXPLORE about us!</a>
+        </div>
 
-        <h1>hello <%=locals.email%>
-        </h1>
+    </section>
+
+    <section class="destinations" id="s2">
+        <h3 class="title">ABOUT OUR WEBSITE:</h3>
+        <p>Mihir ka loda chota hei</p>
         <hr>
-        <h1>about airport</h1>
+
+    </section>
+
+
+
+
+
+
+
+    <section class="contact">
+        <h3 class="title">Join our daily updates</h3>
+        <p>receive an email each time we have offers</p>
         <hr>
-        <h1>find your flight</h1>
-        <hr>
-        <h1>search flight</h1>
 
-        <hr>
-        <h1>amminities</h1>
-        <hr>
+        <form>
+            <input type="email" placeholder="Email">
+            <a href="#" class="btn">yes i am in</a>
+        </form>
+    </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
+    <footer>
+        <ul>
+            <li><a href="#"><i class="fa fa-twitter-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-snapchat-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-pinterest-square"></i></a></li>
+            <li><a href="#"><i class="fa fa-github-square"></i></a></li>
+        </ul>
+        <p>Made by Mihir and Manas</p>
+        <p>dbis project cse 210001050 and 210001038</p>
+    </footer>
 
 </body>
 
