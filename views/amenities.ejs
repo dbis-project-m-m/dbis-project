@@ -10,7 +10,53 @@
 
 <body>
     <%- include('./templates/partials/navbar.ejs')%>
-        <h1>amminities</h1>
+        <h1>Review section</h1>
+
+        <form action="/review_search">
+
+            <label for="search_by_airline">search by airline</label>
+            <input type="text" id="search_by_airline" name="airline">
+    
+            <label for="search_by_username">search by username</label>
+            <input type="text" id="search_by_username" name="username">
+
+            <button type="submit">apply changes</button>
+        </form>
+
+
+
+
+        <table>
+            <tr>
+                <td>
+                    Airline
+                </td>
+                <td>
+                    Review
+                </td>
+                <td>
+                    Username
+                </td>
+            </tr>
+           <% for(let item of result){%>
+                <tr>
+                    <td>
+                        <%=item.airline%>
+                    </td>
+                    <td>
+                        <%= item.review%>
+                    </td>
+                    <td>
+                        <%=item.username%>
+                    </td>
+                </tr>
+                <% }%>
+        </table>
+
+        <h1>lost baggage section</h1>
+        
+
+
 </body>
 
 </html>

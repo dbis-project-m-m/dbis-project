@@ -124,6 +124,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/home', (req, res) => {
+
     if (req.session.email != undefined) {
         res.render('home.ejs', { email: req.session.email });
     }
@@ -145,7 +146,24 @@ app.get('/new', (req, res) => {
     res.render('reset.ejs')
 })
 app.get('/amenities', (req, res) => {
-    res.render('amenities.ejs')
+
+    db.query("select r.review, r.airline, l.username, r.rating from reviews as r join login as l on l.login_id=r.login_id", (err ,result)=>{
+        res.render('amenities.ejs', {result})
+    })
+
+})
+
+
+app.get('/review_search', (req, res)=>{
+
+    let myobject={
+        airline: req.query.airline,
+        username: req.query.username
+    }
+
+    db.query("select r.review, r.airline, l.username, r.rating from reviews as r join login as l on l.login_id=r.login_id where l.username like '%"+myobject.username+"%' and r.airline like '%"+myobject.airline+"%'", (err, result)=>{
+        res.render('amenities.ejs', {result})
+    } )
 })
 app.get('/find_flight', (req, res) => {
     if (req.session.email != undefined) {
@@ -312,6 +330,10 @@ app.get('/output', (req, res) => {
 })
 app.get('/my_account', (req, res) => {
 
+    if (req.session.email == undefined) {
+        res.redirect('/sign_in')
+    }
+
     let sql = `select * from tickets as t
     join login as l on l.email=t.user_mail join
      bookings as b on b.booking_id=t.booking_id  join
@@ -333,6 +355,24 @@ app.get('/navbar', (req, res) => {
 
 app.get('/booking', (req, res) => {
     res.render('booking.ejs')
+})
+app.get('/reset', (req, res) => {
+    let data = {
+        name: req.query.username,
+        age: req.query.age,
+        country: req.query.country,
+        phone: req.query.phone,
+        address: req.query.address
+    }
+    let sql = `update login set username='${data.name}',age='${data.age}',country='${data.country}',address='${data.address}' where email='${req.session.email}';`
+
+    db.query(sql, (err, results) => {
+        if (err) console.log(err)
+
+        res.render('reset.ejs', { results })
+
+    })
+
 })
 
 app.listen(3000, () => {
